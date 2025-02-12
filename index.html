@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Cost Savings Calculator</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Aptos', sans-serif;
+            text-align: left;
+            margin: 40px;
+        }
+        .container {
+            max-width: 600px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #savings-output {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script>
+        function calculateSavings() {
+            const vehicleData = {
+                petrol: { cost: 800000, fuelPerKm: 7, maintenance: 15000, resale: 300000 },
+                diesel: { cost: 900000, fuelPerKm: 5.5, maintenance: 18000, resale: 350000 },
+                cng: { cost: 850000, fuelPerKm: 4, maintenance: 12000, resale: 320000 },
+                ev: { cost: 1200000, fuelPerKm: 1.2, maintenance: 5000, resale: 500000 }
+            };
+            
+            let fuelType = document.getElementById('fuelType').value;
+            let annualDistance = document.getElementById('distance').value || 10000;
+            
+            let years = [1, 2, 3, 4, 5];
+            let evData = vehicleData.ev;
+            let selectedVehicle = vehicleData[fuelType];
+            
+            let evTotalCost = evData.cost + (evData.fuelPerKm * annualDistance * 5) + (evData.maintenance * 5) - evData.resale;
+            let selectedTotalCost = selectedVehicle.cost + (selectedVehicle.fuelPerKm * annualDistance * 5) + (selectedVehicle.maintenance * 5) - selectedVehicle.resale;
+            
+            let savings = selectedTotalCost - evTotalCost;
+            document.getElementById('savings-output').textContent = savings.toLocaleString();
+            
+            let evCostPerKm = [], selectedCostPerKm = [];
+            years.forEach(year => {
+                evCostPerKm.push((evData.cost + (evData.fuelPerKm * annualDistance * year) + (evData.maintenance * year) - evData.resale) / (annualDistance * year));
+                selectedCostPerKm.push((selectedVehicle.cost + (selectedVehicle.fuelPerKm * annualDistance * year) + (selectedVehicle.maintenance * year) - selectedVehicle.resale) / (annualDistance * year));
+            });
+            
+            let ctx = document.getElementById('costChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [
+                        { label: 'EV Cost per km', data: evCostPerKm, borderColor: 'green', fill: false },
+                        { label: fuelType.toUpperCase() + ' Cost per km', data: selectedCostPerKm, borderColor: 'red', fill: false }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: 'Years' } },
+                        y: { title: { display: true, text: 'Cost per km (₹)' } }
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>EV Cost Savings Calculator</h1>
+        <label for="fuelType">Select Fuel Type:</label>
+        <select id="fuelType">
+            <option value="petrol">Petrol</option>
+            <option value="diesel">Diesel</option>
+            <option value="cng">CNG</option>
+        </select><br><br>
+        
+        <label for="distance">Annual Distance (km):</label>
+        <input type="number" id="distance" min="1000" value="10000"><br><br>
+        
+        <button onclick="calculateSavings()">Calculate Savings</button>
+        
+        <h2>Total Savings in 5 Years: ₹<span id="savings-output">0</span></h2>
+        <canvas id="costChart"></canvas>
+        
+        <a href="#" onclick="document.getElementById('assumptions').classList.toggle('hidden')">View Assumptions</a>
+        <div id="assumptions" class="hidden">
+            <h3>Assumptions</h3>
+            <table border="1">
+                <tr>
+                    <th>Vehicle Type</th><th>Cost (₹)</th><th>Fuel Cost per km (₹)</th><th>Annual Maintenance (₹)</th><th>Resale Value (₹)</th>
+                </tr>
+                <tr><td>Electric Vehicle</td><td>12,00,000</td><td>1.2</td><td>5,000</td><td>5,00,000</td></tr>
+                <tr><td>Petrol Car</td><td>8,00,000</td><td>7</td><td>15,000</td><td>3,00,000</td></tr>
+                <tr><td>Diesel Car</td><td>9,00,000</td><td>5.5</td><td>18,000</td><td>3,50,000</td></tr>
+                <tr><td>CNG Car</td><td>8,50,000</td><td>4</td><td>12,000</td><td>3,20,000</td></tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
