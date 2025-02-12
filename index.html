@@ -73,13 +73,13 @@
 
             let fuelData = fuelCosts[fuelType];
             let evData = fuelCosts['ev'];
-            let years = [1, 2, 3, 4, 5];
+            let years = [...Array(10).keys()].map(i => i + 1);
             let fuelPerKm = fuelPrice / mileage;
             let fuelCostOverYears = years.map(y => (fuelPerKm * annualDistance * y) + fuelData.vehicleCost);
             let evCostOverYears = years.map(y => (evData.perKm * annualDistance * y) + evData.vehicleCost);
             let savingsOverYears = fuelCostOverYears.map((cost, i) => cost - evCostOverYears[i]);
             
-            document.getElementById('savings-output').textContent = `You save ₹${savingsOverYears[4].toLocaleString()} in 5 years.`;
+            document.getElementById('savings-output').textContent = `You save ₹${savingsOverYears[9].toLocaleString()} in 10 years.`;
             updateChart(years, savingsOverYears);
         }
 
