@@ -79,8 +79,7 @@
             let evCostOverYears = years.map(y => (evData.perKm * annualDistance * y) + evData.vehicleCost);
             let savingsOverYears = fuelCostOverYears.map((cost, i) => cost - evCostOverYears[i]);
             
-            document.getElementById('savings-output').textContent = `You save ₹${savingsOverYears[9].toLocaleString()} in 10 years.`;
-            updateChart(years, savingsOverYears);
+            document.getElementById('savings-output').textContent = `You save ₹${new Intl.NumberFormat('en-IN').format(savingsOverYears[9])} in 10 years.`;
         }
 
         function updateChart(years, savingsOverYears) {
