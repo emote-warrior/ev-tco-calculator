@@ -62,11 +62,21 @@
 
         function calculateSavings() {
             let fuelType = document.getElementById('fuel-type').value;
+            let mileage = parseFloat(document.getElementById('mileage').value);
+            let fuelPrice = parseFloat(document.getElementById('fuel-price').value);
+            let annualDistance = parseFloat(document.getElementById('annual-distance').value);
+
+            if (isNaN(mileage) || mileage <= 0 || isNaN(fuelPrice) || fuelPrice <= 0 || isNaN(annualDistance) || annualDistance <= 0) {
+                alert("Please enter valid numerical values.");
+                return;
+            }
+
             let fuelData = fuelCosts[fuelType];
             let evData = fuelCosts['ev'];
             let years = [1, 2, 3, 4, 5];
-            let fuelCostOverYears = years.map(y => (fuelData.perKm * 15000 * y) + fuelData.vehicleCost);
-            let evCostOverYears = years.map(y => (evData.perKm * 15000 * y) + evData.vehicleCost);
+            let fuelPerKm = fuelPrice / mileage;
+            let fuelCostOverYears = years.map(y => (fuelPerKm * annualDistance * y) + fuelData.vehicleCost);
+            let evCostOverYears = years.map(y => (evData.perKm * annualDistance * y) + evData.vehicleCost);
             let savingsOverYears = fuelCostOverYears.map((cost, i) => cost - evCostOverYears[i]);
             
             document.getElementById('savings-output').textContent = `You save ₹${savingsOverYears[4].toLocaleString()} in 5 years.`;
@@ -119,14 +129,18 @@
             <option value="diesel">Diesel</option>
             <option value="cng">CNG</option>
         </select>
+        <p>Enter Mileage (km/l for fuel, km/kWh for EV):</p>
+        <input type="number" id="mileage" placeholder="e.g., 15">
+        <p>Enter Fuel Price in Your City (₹ per litre/unit):</p>
+        <input type="number" id="fuel-price" placeholder="e.g., 100">
+        <p>Select Annual Distance Travelled (km):</p>
+        <input type="number" id="annual-distance" min="7500" max="15000" step="500" value="10000">
         <button type="button" onclick="calculateSavings()">Calculate Savings</button>
         <h2>Total Savings: <span id="savings-output">0</span></h2>
         <canvas id="savingsChart"></canvas>
         <button onclick="toggleAssumptions()">Show Assumptions</button>
         <div id="assumptions">
             <h3>Assumptions</h3>
-            <p>Annual distance traveled: 15,000 km</p>
-            <p>Petrol cost per km: ₹6.5 | Diesel: ₹5.5 | CNG: ₹4.0 | EV: ₹1.5</p>
             <p>Vehicle cost: Petrol - ₹8L | Diesel - ₹9L | CNG - ₹8.5L | EV - ₹10L</p>
         </div>
     </div>
