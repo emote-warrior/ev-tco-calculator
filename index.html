@@ -80,6 +80,7 @@
             let savingsOverYears = fuelCostOverYears.map((cost, i) => cost - evCostOverYears[i]);
             
             document.getElementById('savings-output').textContent = `You save ₹${new Intl.NumberFormat('en-IN').format(savingsOverYears[9])} in 10 years.`;
+            updateChart(years, savingsOverYears);
         }
 
         function updateChart(years, savingsOverYears) {
