@@ -57,7 +57,7 @@
             petrol: { perKm: 6.5, vehicleCost: 800000 },
             diesel: { perKm: 5.5, vehicleCost: 900000 },
             cng: { perKm: 4.0, vehicleCost: 850000 },
-            ev: { perKm: 1.5, vehicleCost: 1000000 }
+            ev: { perKm: (5 * 25 / 315), vehicleCost: 1000000 } // Updated EV cost per km
         };
 
         function calculateSavings() {
@@ -142,6 +142,7 @@
         <div id="assumptions">
             <h3>Assumptions</h3>
             <p>Vehicle cost: Petrol - ₹8L | Diesel - ₹9L | CNG - ₹8.5L | EV - ₹10L</p>
+            <p>EV Assumptions: Charging Tariff ₹5/unit, Battery Size 25 kWh, Range 315 km, Cost per km: ₹0.40</p>
         </div>
     </div>
 </body>
